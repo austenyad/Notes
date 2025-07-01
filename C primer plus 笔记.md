@@ -122,3 +122,66 @@ int main(void) {
 
 得出这些奇怪答案的原因是，计算机缺少足够的小数位来完成正确的运 算。2.0e20是 2后面有20个0。如果把该数加1，那么发生变化的是第21位。 要正确运算，程序至少要储存21位数字。而float类型的数字通常只能储存按 指数比例缩小或放大的6或7位有效数字。在这种情况下，计算结果一定是错 误的。另一方面，如果把2.0e20改成2.0e4，计算结果就没问题。因为2.0e4 加1只需改变第5位上的数字，float类型的精度足够进行这样的计算。
 
+### 复数和虚数
+
+C语言有3种复数类型：`float _Complex`、`double _Complex`和 `long double _Complex`。例如，`float _Complex`类型的变量应包含两个 float 类型的值，分别表示复数的实部和虚部。
+
+C语言的3种虚数类型是`float _Imaginary`、`double _Imaginary`和`long double _Imaginary`。
+
+如果引入了 `complex.h` 头文件，使用 `complex` 代替 `_Complex`，用`imaginary` 代替`_Imaginary`，还可以用`I`代替-1的平方根。
+
+
+
+## 小结
+
+#### 关键字
+
+基本数据类型由11个关键字组成
+
+`int`、`long`、`short`、`unsigned`、`char`、 `float`、`double`、`signed`、`_Bool`、`_Complex`和`_Imaginary`。
+
+#### 有符号整形
+
+有符号整型可用于表示正整数和负整数。
+
+* `int` 系统给定的基本整数类型。C语言规定`int`类型不小于16位。
+* `short`或`short int` ——`最大的short类型整数` <= `最大的int类型整数`。C语言规定short类型至少占16位。
+* `long`或`long int` ——`该类型可表示的整数 >= `最大的int类型整数`。 C语言规定long类型至少占32位。
+* `long long`或`long long int` ——`该类型可表示的整数 >= `最大的long 类型整数`。Long long类型至少占64位。
+
+一般而言，long类型占用的内存比short类型大，int类型的宽度要么和 long类型相同，要么和short类型相同。
+
+#### 无符号整形
+
+无符号整型**只能用于表示零和正整数**，因此无符号整型可表示的正整数比有符号整型的大。在整型类型前加上关键字`unsigned`表明该类型是无符号整型：
+
+`unsigned int`、`unsigned long`、`unsigned short`。单独的`unsigned`相当于 `unsigned int`。
+
+#### 字符类型
+
+`char` —— 字符类型的关键字。有些编译器使用**有符号的char**，而有些则使用**无符号的char**。在需要时，可在char前面加上关键字 `signed` 或 `unsigned` 来指明具体使用哪一种类型。
+
+`char` 类型要占用 1个字节内存，即 8 位bit ，但是如果要 表示基本字符集，也可以是16位或更大。
+
+#### 布尔类型
+
+`_Bool` 布尔值表示 true 和 false。C语言用1表示true，0表示false。布尔类型是无符号 `int`类型，所占用的空间只要能储存 0 或 1 即可。
+
+#### 实浮点类型
+
+实浮点类型可表示正浮点数和负浮点数。
+
+`float` ——系统的基本浮点类型，可精确表示至少6位有效数字。
+
+`double` ——储存浮点数的范围（可能）更大，能表示比 float 类型更多 的有效数字（至少 10位，通常会更多）和更大的指数。
+
+`long double` ——储存浮点数的范围（可能）比double更大，能表示比 double更多的有效数字和更大的指数。
+
+#### 复数和虚数浮点数
+
+
+
+
+
+
+
