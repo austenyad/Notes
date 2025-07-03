@@ -201,8 +201,6 @@ C语言的3种虚数类型是`float _Imaginary`、`double _Imaginary`和`long do
 
 
 
-
-
 # 四. 输入/输出
 
 ### 字符串
@@ -211,5 +209,7 @@ C语言的3种虚数类型是`float _Imaginary`、`double _Imaginary`和`long do
 2. `scanf("%s",name)`  输入函数在读取输入的字符时，只会读取一个单词，比如输入 `austen Yang` ，输入函数只会读取 `austen` 存储到 `name` 变量中。
 3. `strlen()` 函数计算出字符串的长度，虽然字符串一定以空字符 `\0` 结尾，但是这个函数不会计入空字符，对一个字符串 `sizeof` ，会计入空字符的个数。
 4. C99 和 C11 标准专门为 `sizeof` 函数的返回值类型添加 `%zd` 的格式符，这个对于 `strlen()` 函数同于适用。对于早期的C，还要知道sizeof和 strlen()返回的实际类型（通常是`unsigned`或`unsigned long`）。所以有的 IDEA 编辑时，提示使用 `%lu` 进行 格式化。
-5. 
+5. =======
+
+
 
