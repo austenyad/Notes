@@ -253,5 +253,54 @@ C 头文件 `limits.h` 和 `float.h` 分别提供了与 整数类型和浮点数
 
 表中所列都与`float`类型相关。把明示常量名中的`FLT`分别替换成 `DBL`和`LDBL`，即可分别表示`double`和`long double`类型对应的明示常量（表中 假设系统使用2的幂来表示浮点数）。
 
+### Printf 函数
 
+列出常用的格式化符号
 
+![image-20250703221106173](https://p.ipic.vip/fbi1dv.png)
+
+# 七 C 控制语句：分支和跳转
+
+1. `getchar()` ：函数不带任何参数，它从输入队列中返回下一个字符。`putchar(char)` ：函数打印字符。例子如下：
+
+```c
+int main(void) {
+    char ch;
+    while ((ch = getchar()) != '\n') {
+        if (ch == SPACE) {
+            putchar(ch);
+        } else {
+            putchar(ch + 1);
+        }
+    }
+    putchar(ch);
+    return 0;
+}
+```
+
+2. `ctype.h`头文件中的函数，接受一个字符为参数，如果该字符属于某特殊的类别，就返回一个非零值（真）；否则，返回0（假）。例如 `isalpha()` 函数 输入要给参数，判断参数是不是字母。
+
+```c
+int main(void) {
+    char ch;
+    while ((ch = getchar()) != '\n') {
+        if (isalpha(ch)) {
+            putchar(ch + 1);
+        } else {
+            putchar(ch);
+        }
+    }
+    putchar(ch);
+    return 0;
+}
+```
+
+下面表列出 `ctype.h` 字符测试函数
+
+![](https://p.ipic.vip/3d47h0.png)
+
+下面表列出 `ctype.h` 字符映射函数
+
+![](https://p.ipic.vip/bnu2si.png)
+
+# 八、字符输入/输出和输入验证
