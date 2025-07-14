@@ -333,3 +333,32 @@ example3.c > b文件 > a 文件 （读取A文件输入到B文件）
 上面程序会把 a 文件中的内容输出到 b 文件中。上面两个是一样的。
 
 使用重定向运算符不能读取多个文件的输入，也不能把输出定向至多个 文件。
+
+5. `>>` 运算符 可以把数据添加到文件末尾。
+6. `|`运算符可以把一个文件的输出连接到另一个文件的输入。
+7. 代码片段
+
+```c
+// 从控制台输入读取文件名的名字，并且输入文件内容到控制台。
+int main(void) {
+    int ch;
+    FILE *fp;
+    char filename[50]; // 存储文件名
+    printf("Enter the name of the file: ");
+    scanf("%s", filename);
+    fp = fopen(filename, "r"); // 打开待读取文件
+    if (fp == NULL) {
+        printf("Failed to open file. Bye\n");
+        exit(1);
+    }
+    // getc(fp) 从打开的文件中获取一个字符
+    while ((ch = getc(fp)) != EOF) {
+        putchar(ch);
+    }
+    fclose(fp); // 关闭文件
+    return 0;
+}
+```
+
+# 第九章 函数
+
