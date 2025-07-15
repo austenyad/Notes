@@ -103,3 +103,35 @@ val a = remember{ b + 1}
 1. `val  a = remember(key){ b+1 }`函数中的 key ，当这个 key 对象内部进行改变时，并不会引起使用了这个函数返回状态 a 的组件们发生必要的重组。
 2. 在 1 这种状态下，当明确 key 对象上次和本次重组时，对象内部发生变化而无法判断事，就应用使用 `remember{ derivedStateOf{ b + 1} }`，来解决上面问题。
 
+
+
+
+
+
+
+
+
+
+
+## CompositionLocal
+
+**具有穿透函数功能的局部变量** 
+
+**不需要显示传递的函数参数**
+
+```kotlin
+val LocalName = compositionLocalOf<String> { error("No Provide Value") }
+
+CompositionLocalProvider(LocalName provides "Android"){
+	Text(LocalName.current)
+}
+```
+
+使用场景 ：上下文 / 主题  
+
+定义 CompositionLocal 有没有默认值视情况而定，但大多数情况下抛异常。
+
+1. compositionLocalOf 跟踪使用它的值，当值发生变化时 重组刷新使用到值的组件。（有跟踪上的性能消耗，但当它改变时并不需要全部重组刷新）
+2. staticCompositionLocalOf 不跟踪使用值，但当值变化时，会进行全部范围重组。（没有了跟踪时的性能消耗，但却提高了当它改变时的性能消耗）
+
+什么时候用 compositionLocalOf 创建 CompositionLocal ，使用时候使用 staticCompositionLocalOf 创建 CompositionLocal？
