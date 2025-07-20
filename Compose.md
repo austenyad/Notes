@@ -200,3 +200,54 @@ State 不能手动修改 State 中的值
         )
     }
 ```
+
+
+
+
+## Animation Spec
+
+### TweenSpect
+
+
+
+### SnapSpect 
+
+describes a jump-cut type of animation
+
+```kotlin
+//对象
+SnapSpec<T>(delayMillis)
+//简便调用
+fun <T> snap(delayMillis: Int = 0) = SnapSpec<T>(delayMillis)
+```
+
+### KeyframesSpec
+
+关键帧动画
+
+```kotlin
+fun <T> keyframes(init: KeyframesSpec.KeyframesSpecConfig<T>.() -> Unit): KeyframesSpec<T>
+```
+
+使用例子
+
+```kotlin
+ var isBig by remember { mutableStateOf(false) }
+    val size by animateDpAsState(
+        if (isBig) 200.dp else 100.dp, animationSpec =
+            keyframes {
+                200.dp at 0 using LinearEasing // 设置 这段动画的 速率，给一个关键帧设置 速率，设置的是从当前 开始 到一下一个关键帧的 速率
+                300.dp at 150 
+                20.dp at 300
+                durationMillis = 1000 // 设置动画总时长
+                delayMillis = 1000 // 设置动画的延时
+            })
+    Box(
+        modifier
+            .size(size)
+            .background(Color.Green)
+            .clickable {
+                isBig = !isBig
+            })
+```
+
