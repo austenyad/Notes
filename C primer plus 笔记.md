@@ -362,3 +362,243 @@ int main(void) {
 
 # 第九章 函数
 
+
+
+
+
+### 9.4 编译多文件代码
+
+1. 假设file1.c和file2.c是两个内含C函数的文件，下面的命令将编译 两个文件并生成一个名为a.out的可执行文件：
+
+`gcc file1.c file2.c`
+
+另外，还生成两个名为file1.o和file2.o的目标文件。
+
+如果后来改动了 file1.c，而file2.c不变，可以使用以下命令编译第1个文件，并与第2个文件 的目标代码合并：
+
+`gcc file1.c file2.o`
+
+2. 把**函数原型**和**已定义的字符常量**放在头文件中是一个良好的编程习惯。
+
+
+
+例子：
+
+hotel.h
+
+```c
+#define QUIT 5
+#define HOTEL1 180.00
+#define HOTEL2 225.00
+#define HOTEL3 225.00
+#define HOTEL4 355.00
+
+#define DISCOUNT 0.95
+
+#define STARS "**********************************"
+
+
+// 显示选择列表
+
+int menu(void);
+
+
+// 返回预订天数
+
+int getnights(void);
+
+
+// 根据费率、入住天数计算费用
+// 并显示结果
+
+void showprice(double rate, int nights);
+```
+
+usehotel.c 
+
+```c
+#include <stdio.h>
+
+#include "hotel.h"
+
+int main(void)
+{
+
+    int nights;
+    double hotel_rate;
+    int code;
+
+    while ((code = menu()) != QUIT)
+        {
+            switch (code)
+            {
+            case 1:
+                hotel_rate = HOTEL1;
+                break;
+            case 2:
+                hotel_rate = HOTEL2;
+                break;
+            case 3:
+                hotel_rate = HOTEL3;
+                break;
+            case 4:
+                hotel_rate = HOTEL4;
+                break;
+
+            default:
+                hotel_rate = 0.0;
+                printf("Oops\n");
+                break;
+            }
+
+            nights = getnights();
+
+            showprice(hotel_rate, nights);
+        }
+
+    printf("Thank you and goodbye!/n");
+
+
+    return 0;
+
+
+}
+```
+
+hotel.c
+
+```c
+#include <stdio.h>
+
+#include "hotel.h"
+
+int menu(void)
+{
+    int code, status;
+    printf("\n%s%s\n", STARS, STARS);
+    printf("Enter the number of the desired hotel :\n");
+    printf("1) Fairfield Arms           2) Hotel Olympics\n");
+    printf("3) Chertworthy Plaza        4) The Stockton\n");
+    printf("5) Quit\n");
+    printf("%s%s\n", STARS, STARS);
+
+    while ((status = scanf("%d", &code)) != 1 || (code < 1 || code > 5))
+    {
+        if (status != 1)
+            scanf("%*s"); // 处理非整数输入
+        printf("Enter an integer from 1 to 5, please\n");
+    }
+    return code;
+}
+
+int getnights(void)
+{
+    int nights;
+    printf("How many nights are needed? ");
+    while (scanf("%d", &nights) != 1)
+    {
+        scanf("%*s"); // 处理非整数输入
+        printf("Please enter an integer, such as 2.\n");
+    }
+    return nights;
+}
+
+void showprice(double rate, int nights)
+{
+    int n;
+    double total = 0.0;
+    double factor = 1.0;
+    for (n = 1; n <= nights; n++, factor *= DISCOUNT)
+        total += rate * factor;
+    printf("The total cost will be $%0.2f.\n", total);
+}
+```
+
+使用 gcc 编译：
+
+`gcc usehotel.c hotel.c` 
+
+运行后，直接生成 a.out 可执行文件。
+
+### 9.5 &运算符
+
+1. 一元 & 运算符，给出变量的存储地址。 如果 `pooh`是变量名，那么 `&pooh` 是变量的地址。地址就是变量在内存中的位置。假设有下面的语句：
+
+`pooh = 24;`
+
+假设 `pooh` 的存储地址是 `0B76`（通常使用 十六进制 表示）。那么下面的语句：
+
+`printf("%d %p\n",pooh,&pooh);`
+
+将输出下面内容：`24 0x16fafea98`
+
+2. 函数调用值传递
+
+```c
+void mikado(int);
+
+int main(void) {
+    int pooh = 2, bah = 5;
+    printf("In main(), pooh = %d and &pooh = %p\n", pooh, &pooh);
+    printf("In main(), bah = %d and &bah = %p\n", bah, &bah);
+    mikado(pooh);
+    return 0;
+}
+
+
+void mikado(int bah) {
+    int pooh = 10;
+    printf("In mikado(), pooh = %d and &pooh = %p\n", pooh, &pooh);
+    printf("In mikado(), bah = %d and &bah = %p\n", bah, &bah);
+}
+```
+
+输出：
+
+```c
+In main(), pooh = 2 and &pooh = 0x16b316a98
+In main(), bah = 5 and &bah = 0x16b316a94
+In mikado(), pooh = 10 and &pooh = 0x16b316a58
+In mikado(), bah = 2 and &bah = 0x16b316a5c
+```
+
+main 函数调用 mikado 函数 传递的变量 `pooh`，是值传递。
+
+### 9.7 指针简介
+
+从根本上看，**指针（pointer）**是一个值为内存地址 的变量（或数据对象）。
+
+比如一个指针变量是 `ptr`，可以编写如下语句：
+
+`ptr = &pooh;`  // 把 pooh 的地址赋给 ptr。
+
+对于上面语句，我们说 `ptr` 指向 `pooh` 。
+
+`ptr` 和 `&pooh` 的区别是 `ptr` 是变量，而 `&pooh` 是常量。
+
+或者说，`ptr` 是可以修改的左值，而 `&pooh` 是右值。
+
+与指针相关的运算符：
+
+地址运算符：`&`
+
+后跟一个变量名时，`&` 给出变量的地址。`&nurse` 表示变量 `nurse` 的地址变量。
+
+地址运算符：`*`
+
+后跟一个指针名或地址时，`*` 给出存储在指针指向地址上的值。
+
+```c
+nurse = 22;
+ptr = &nurse; // 指向 nurse 的指针
+val = *ptr; // 把 ptr 指向的地址上的值赋值给 val
+```
+
+
+
+
+
+
+
+
+

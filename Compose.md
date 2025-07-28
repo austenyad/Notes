@@ -206,6 +206,8 @@ State 不能手动修改 State 中的值
 
 ## Animation Spec
 
+![](//www.plantuml.com/plantuml/png/SoWkIImgAStDuShCAqajIajCJbLmAIrABCdCptDAB4vDSSpBp0NpWWjIaxcuSCifsDJewIc4bAUcvX5K5PoNM03Y4LJedLgPLfIOcreCLksGcfS2T2e0)
+
 ### TweenSpect
 
 
@@ -250,4 +252,66 @@ fun <T> keyframes(init: KeyframesSpec.KeyframesSpecConfig<T>.() -> Unit): Keyfra
                 isBig = !isBig
             })
 ```
+
+### SpringSpec
+
+```kotlin
+/
+ * dampingRatio: 阻尼比，描述弹簧有多弹
+ * stiffness: 刚度，描述弹簧刚度有多强
+ * visibilityThreshold:阈值，控制弹簧停止的阈值
+ */
+@Stable
+fun <T> spring(
+    dampingRatio: Float = Spring.DampingRatioNoBouncy,
+    stiffness: Float = Spring.StiffnessMedium,
+    visibilityThreshold: T? = null
+): SpringSpec<T> =
+    SpringSpec(dampingRatio, stiffness, visibilityThreshold)
+```
+
+### RepeatableSpec
+
+```kotlin
+/
+* 
+* iterations: 重复的次数
+* animation: 指定要重复的动画，只能是 DurationBasedAnimationSpec 的子类动画
+* repeatMode: 重复模式：1.重启 2. 倒放、
+*/
+@Stable
+fun <T> repeatable(
+    iterations: Int,
+    animation: DurationBasedAnimationSpec<T>,
+    repeatMode: RepeatMode = RepeatMode.Restart,
+    initialStartOffset: StartOffset = StartOffset(0)
+): RepeatableSpec<T> =
+    RepeatableSpec(iterations, animation, repeatMode, initialStartOffset)
+```
+
+### InfiniteReatableSpect
+
+和 RepeatableSpec 的区别就是一个有次数限制，一个没有。
+
+
+
+## AnimateDecay 消散型动画
+
+惯性衰减
+
+exponentialDecay
+
+splineBasedDecay
+
+
+
+## Animate Listener
+
+Animatable 
+
+`animateTo(block)`
+
+`animateDecay(block)` 
+
+这个两个方法中，block 是动画执行每一帧时会进行回调的 `lambda`。 
 
