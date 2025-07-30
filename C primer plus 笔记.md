@@ -594,11 +594,69 @@ ptr = &nurse; // 指向 nurse 的指针
 val = *ptr; // 把 ptr 指向的地址上的值赋值给 val
 ```
 
+### 9.7.2 声明指针
+
+`int *pi;` // pi 是指向 int 类型变量的指针
+
+`char *pc;` // pc 是指向 char 类型变量的指针
+
+`float *pf,*pg;`// pf、pg 都是指向 float 类型的指针
+
+类型说明了 指针所指向对象的类型，星号 表明声明的变量是一个指针。`int *pi;`  声明的意思是 pi 是一个指针，*pi 是 int 类型。
+
+在大部分系统中，地址是由一个无符号整数表示，但是不要把指针认为是整数类型，一些处理整数的操作不能用来处理指针，反之亦然。所以，指针实际上是一个新类型，不是整数类型。因 此，如前所述，ANSI C专门为指针提供了`%p`格式的转换说明。
+
+### 9.7.3 指针在函数间通信
+
+指针在函数间通信的最好的例子就是，定义交换变量的函数。比如：
+
+```c
+void interchange(int*, int*);
+int main(void) {
+    int x = 5, y = 10;
+    printf("Originally x = %d and y = %d.\n", x, y);
+    interchange(&x, &y);
+    printf("Now x = %d and y = %d.\n", x, y);
+    return 0;
+}
+
+void interchange(int * x, int * y) {
+    const int temp = *y;
+    *y = *x;
+    *x = temp;
+}
+```
 
 
 
+小结：
+
+* 如果需要在被调用函数中改变主调函数的变量，使用地址或者指针作为函数参数。
+* 函数原型 是 C 的强大的工具，允许编译器验证函数调用中使用的参数个数和类型是否正确。
 
 
 
+### 9.10 复习题
 
+1. 实际参数和形式参数的区别是什么？
+
+答：实际参数就是就是函数体中的变量，形参就是函数声明的参数中声明的变量，在函数调用过程中，形参只是对，实际参数的拷贝。
+
+2. 根据下面各函数的描述，分别编写它们的ANSI C函数头。注意，只需 写出函数头，不用写函数体。
+
+a. donut()接受一个int类型的参数，打印若干（参数指定数目）个0
+
+`void donut(int);`
+
+b. gear()接受两个int类型的参数，返回int类型的值
+
+`int gear(int,int);`
+
+c. guess()不接受参数，返回一个int类型的值
+
+`int guess();`
+
+d. stuff_it()接受一个double类型的值和double类型变量的地址，把第1个 值储存在指定位置
+
+`void stuff_it(double,double*);`
 
