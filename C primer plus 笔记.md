@@ -362,6 +362,56 @@ int main(void) {
 
 # 第九章 函数
 
+1. 函数声明与调用：因为 C 语言 ANSI C 标准之前，声明函数只需要声明函数的名字，返回值，不需要声明函数才参数。所以我们在现在的编译器下，会出现：
+
+```c
+int imin();
+
+
+int main(void){
+	imin(1,3,3,3);
+}
+```
+
+上面的代码编译时是不会报错的。
+
+```c
+int imax(); /* 旧式函数声明 */
+int main(void) {
+    printf("The maximum of %d and %d is %d.\n",3,5,imax(3));
+    printf("The maximum of %d and %d is %d.\n",3,5,imax(3.0,5.0));
+    return 0;
+}
+
+int imax(n, m)
+int n, m; {
+    return (n > m ? n : m);
+}
+
+```
+
+上面的代码是可以运行的。
+
+2. 参数不规定的函数声明，比如 `printf`,使用 `...` 来代表未知类型且多个参数。
+
+```
+int printf(const char *,...)
+```
+
+3. C 语言可以定义函数原型，也可以不定义，不定义时，就必须声明在被调用函数的前面，并且还有函数体。这种函数的使用，只适用于较小的函数。
+
+```c
+int maximum(int a,int b){
+	return a > b ? a : b;
+}
+
+int main(void){
+	maximum(3,10);
+	return 0;
+}
+```
+
+4. 递归
 
 
 
@@ -634,8 +684,6 @@ void interchange(int * x, int * y) {
 * 如果需要在被调用函数中改变主调函数的变量，使用地址或者指针作为函数参数。
 * 函数原型 是 C 的强大的工具，允许编译器验证函数调用中使用的参数个数和类型是否正确。
 
-
-
 ### 9.10 复习题
 
 1. 实际参数和形式参数的区别是什么？
@@ -659,4 +707,233 @@ c. guess()不接受参数，返回一个int类型的值
 d. stuff_it()接受一个double类型的值和double类型变量的地址，把第1个 值储存在指定位置
 
 `void stuff_it(double,double*);`
+
+3. 根据下面各函数的描述，分别编写它们的ANSI C函数头。注意，只需 写出函数头，不用写函数体。
+
+a.n_to_char()接受一个int类型的参数，返回一个char类型的值
+
+`char no_to_char(int);`
+
+b.digit()接受一个double类型的参数和一个int类型的参数，返回一个int类 型的值
+
+`int digit(double,int);`
+
+c.which()接受两个可储存double类型变量的地址，返回一个double类型 的地址
+
+`double* which(double*,double*);`
+
+d.random()不接受参数，返回一个int类型的值
+
+`int random(void);`
+
+4. 设计一个函数，返回两整数之和。
+
+```c
+int sum(int a,int b){
+  return a + b;
+}
+
+int sum(const int a, const int b){
+    return a + b;
+}
+```
+
+<font size=4, color='red'><b> 编译器为什么提示加 const ? const 的作用所什么？const 它有没有兼容性问题？</b></font>
+
+5. 如果把复习题4改成返回两个double类型的值之和，应如何修改函数？
+
+```c
+double sum(double a,double b){
+	return a + b;
+}
+```
+
+6. 设计一个名为alter()的函数，接受两个int类型的变量x和y，把它们的值分别改成两个变量之和以及两变量之差。
+
+答：
+
+```c
+void alter(int*,int*);
+int main(void){
+  int x = 10, y = 5;
+	printf("x = %d , y = %d\n",x,y);
+  alter(&x,&y);
+  printf("计算后得到 x = %d , y = %d\n",x,y);
+  return 0;
+}
+
+void alter(int* a,int* b){
+  int tempA = *a;
+  int tempB = *b;
+  *a = tempA + tempB;
+  *b = tempA - tempB;
+}
+```
+
+7. 下面的函数定义是否正确？
+
+```c
+void salami(num)
+{
+int num, count;
+for (count = 1; count <= num; num++)
+printf(" O salami mio!\n");
+}
+```
+
+答：
+
+a. 函数参数声明时，没有什么参数 类型。
+
+b. 声明的 num 变量，并没有初始化值，num 是 for 循环的判断条件，没有初始化值，可能导致在运行时系统给了一个随意的值，如果值 太大，导致循环无法退出，程序崩溃。
+
+c. 声明的 num 实参变量 和 形参一直，导致无法运行。
+
+8.编写一个函数，返回3个整数参数中的最大值。
+
+```c
+
+int maximum(int a,int b,int c){
+  int maxValue = 0;
+	if(a > b){
+    if(a > c){
+      maxValue = a;
+    }else{
+      maxValue = c;
+    }
+  }else{
+    if(b > c){
+      maxValue = b;
+    }else{
+      maxValue = c;
+    }
+  }
+}
+```
+
+其他答案：
+
+a. 
+
+```c
+int maximum(int a, int b, int c) {
+    if (a >= b && a >= c) {
+        return a;
+    }
+    if (b >= a && b >= c) {
+        return b;
+    }
+    return c;
+}
+```
+
+b.
+
+```c
+// 方法三：使用三元运算符 (?:)
+int findMax3(int a, int b, int c) {
+    int tempMax = (a > b) ? a : b; // 先比较 a 和 b
+    return (tempMax > c) ? tempMax : c; // 再用 a 和 b 中的较大者与 c 比较
+}
+```
+
+
+
+
+# 10 数组和指针
+
+### 10.1 数组
+
+数组由数据类型相同的一系列元素组成。如下：
+
+```c
+int main(void)
+{
+float candy[365]; /* 内含365个float类型元素的数组 */
+char code[12]; /*内含12个char类型元素的数组*/
+int states[50]; /*内含50个int类型元素的数组 */
+...
+}
+```
+
+方括号表明：candy、code 和 states 都是数组，方括号中的数组表明数组中的原素个数。通过数组下表（也称为索引）表明数组中的各个原素。数组元素的编号从 0 开始，所以 candy[0] 表示 candy 数组的第一个原素，candy[364] 表示第 356 个原素，也就是最后一个原素。
+
+#### 10.1.1 初始化数组
+
+1. 声明时初始化数组：`int powers[8] = {1,2,4,6,8,16,32,64};`
+
+2. 使用 const 声明数组：`const int powers[8] = {1,2,4,6,8,16,32,64};`，数组只能读，不能把新值写入数组。
+
+3. 初始化列表中的项 数量 和 数组大小不一致，即：`int somedata[4] = {1,2};`，编译器会把剩余的元素都初始化为 0 ，也就是说：如果不初始化数组，数组中的值和未初始化变量一样，其中存储的值都是垃圾值，但是如果初始化数组，剩余的元素会被初始化为 0。
+4. 如果初始化列表项个数大于数组声明的大小，编译器会报错。
+5. 4 这种情况，其实可以不声明数组大小来初始化数组 ：`int somedata[] = {1,2,3};`这时编译器会自动设置 数组大小，也就不会因为 数组个数大于初始化列表项个数报错了。
+6. C99 标准 新增了一个特性：指定初始化器（designated initializer），利用该特性可以初始化指定的数组元素。
+
+```c
+int aar[6] = {[5] = 121};// 指定 aa[5] 为 121，没有指定的其他都是 0。
+int aar2[10] = {1,2,[3]=100,4,[7]=200,8};
+```
+
+```c
+int main(void) {
+    int aar2[10] = {1,2,[3]=100,4,[5]=200,8,[5]=300,1,1,1};
+    for (int i = 0; i < 10; i++) {
+        printf("arr[%d] = %d\n", i, aar2[i]);
+    }
+    return 0;
+}
+// printf 
+arr[0] = 1
+arr[1] = 2
+arr[2] = 0
+arr[3] = 100
+arr[4] = 4
+arr[5] = 300
+arr[6] = 1
+arr[7] = 1
+arr[8] = 1
+arr[9] = 0
+```
+
+从上面得出指定初始化器 ： a. 如果指定初始化器后面有更多值，如上面离职中：[3]=100,4，那么后面的这些值将被用于初始指定元素后面的原生；b. 如果再次初始化指定的元素，那么后面的初始化将会取代之前的初始化。
+
+更多的初始化器的例子
+
+例子1：
+
+```c
+ int stuff[] = {1, [6] = 23};
+ for (int i = 0; i < sizeof stuff / sizeof(int)  ; i++) {
+     printf("stuff[%d] = %d\n", i, stuff[i]);
+ }
+    
+//printf
+stuff[0] = 1
+stuff[1] = 0
+stuff[2] = 0
+stuff[3] = 0
+stuff[4] = 0
+stuff[5] = 0
+stuff[6] = 23
+```
+
+例子2：
+
+```c
+  int staff[] = {1, [6] = 4, 9, 10};
+
+  for (int i = 0; i < sizeof staff / sizeof(int)  ; i++) {
+        printf("stuff[%d] = %d\n", i, staff[i]);
+  }
+//printf
+stuff[0] = 1
+stuff[1] = 0
+stuff[2] = 0
+stuff[3] = 0
+stuff[4] = 0
+stuff[5] = 0
+stuff[6] = 4
+stuff[7] = 9
+stuff[8] = 10
+```
 
