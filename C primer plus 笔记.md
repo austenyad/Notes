@@ -362,3 +362,54 @@ int main(void) {
 
 # 第九章 函数
 
+1. 函数声明与调用：因为 C 语言 ANSI C 标准之前，声明函数只需要声明函数的名字，返回值，不需要声明函数才参数。所以我们在现在的编译器下，会出现：
+
+```c
+int imin();
+
+
+int main(void){
+	imin(1,3,3,3);
+}
+```
+
+上面的代码编译时是不会报错的。
+
+```c
+int imax(); /* 旧式函数声明 */
+int main(void) {
+    printf("The maximum of %d and %d is %d.\n",3,5,imax(3));
+    printf("The maximum of %d and %d is %d.\n",3,5,imax(3.0,5.0));
+    return 0;
+}
+
+int imax(n, m)
+int n, m; {
+    return (n > m ? n : m);
+}
+
+```
+
+上面的代码是可以运行的。
+
+2. 参数不规定的函数声明，比如 `printf`,使用 `...` 来代表未知类型且多个参数。
+
+```
+int printf(const char *,...)
+```
+
+3. C 语言可以定义函数原型，也可以不定义，不定义时，就必须声明在被调用函数的前面，并且还有函数体。这种函数的使用，只适用于较小的函数。
+
+```c
+int maximum(int a,int b){
+	return a > b ? a : b;
+}
+
+int main(void){
+	maximum(3,10);
+	return 0;
+}
+```
+
+4. 递归：
+
