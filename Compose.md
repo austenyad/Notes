@@ -136,13 +136,10 @@ CompositionLocalProvider(LocalName provides "Android"){
 
 什么时候用 compositionLocalOf 创建 CompositionLocal ，使用时候使用 staticCompositionLocalOf 创建 CompositionLocal？
 
+<<<<<<< HEAD
+# Animation
 
-
-
-
-
-
-
+## AnimaXxxState
 
 # 动画
 
@@ -203,4 +200,118 @@ State 不能手动修改 State 中的值
         )
     }
 ```
+
+
+
+
+## Animation Spec
+
+![](//www.plantuml.com/plantuml/png/SoWkIImgAStDuShCAqajIajCJbLmAIrABCdCptDAB4vDSSpBp0NpWWjIaxcuSCifsDJewIc4bAUcvX5K5PoNM03Y4LJedLgPLfIOcreCLksGcfS2T2e0)
+
+### TweenSpect
+
+
+
+### SnapSpect 
+
+describes a jump-cut type of animation
+
+```kotlin
+//对象
+SnapSpec<T>(delayMillis)
+//简便调用
+fun <T> snap(delayMillis: Int = 0) = SnapSpec<T>(delayMillis)
+```
+
+### KeyframesSpec
+
+关键帧动画
+
+```kotlin
+fun <T> keyframes(init: KeyframesSpec.KeyframesSpecConfig<T>.() -> Unit): KeyframesSpec<T>
+```
+
+使用例子
+
+```kotlin
+ var isBig by remember { mutableStateOf(false) }
+    val size by animateDpAsState(
+        if (isBig) 200.dp else 100.dp, animationSpec =
+            keyframes {
+                200.dp at 0 using LinearEasing // 设置 这段动画的 速率，给一个关键帧设置 速率，设置的是从当前 开始 到一下一个关键帧的 速率
+                300.dp at 150 
+                20.dp at 300
+                durationMillis = 1000 // 设置动画总时长
+                delayMillis = 1000 // 设置动画的延时
+            })
+    Box(
+        modifier
+            .size(size)
+            .background(Color.Green)
+            .clickable {
+                isBig = !isBig
+            })
+```
+
+### SpringSpec
+
+```kotlin
+/
+ * dampingRatio: 阻尼比，描述弹簧有多弹
+ * stiffness: 刚度，描述弹簧刚度有多强
+ * visibilityThreshold:阈值，控制弹簧停止的阈值
+ */
+@Stable
+fun <T> spring(
+    dampingRatio: Float = Spring.DampingRatioNoBouncy,
+    stiffness: Float = Spring.StiffnessMedium,
+    visibilityThreshold: T? = null
+): SpringSpec<T> =
+    SpringSpec(dampingRatio, stiffness, visibilityThreshold)
+```
+
+### RepeatableSpec
+
+```kotlin
+/
+* 
+* iterations: 重复的次数
+* animation: 指定要重复的动画，只能是 DurationBasedAnimationSpec 的子类动画
+* repeatMode: 重复模式：1.重启 2. 倒放、
+*/
+@Stable
+fun <T> repeatable(
+    iterations: Int,
+    animation: DurationBasedAnimationSpec<T>,
+    repeatMode: RepeatMode = RepeatMode.Restart,
+    initialStartOffset: StartOffset = StartOffset(0)
+): RepeatableSpec<T> =
+    RepeatableSpec(iterations, animation, repeatMode, initialStartOffset)
+```
+
+### InfiniteReatableSpect
+
+和 RepeatableSpec 的区别就是一个有次数限制，一个没有。
+
+
+
+## AnimateDecay 消散型动画
+
+惯性衰减
+
+exponentialDecay
+
+splineBasedDecay
+
+
+
+## Animate Listener
+
+Animatable 
+
+`animateTo(block)`
+
+`animateDecay(block)` 
+
+这个两个方法中，block 是动画执行每一帧时会进行回调的 `lambda`。 
 
